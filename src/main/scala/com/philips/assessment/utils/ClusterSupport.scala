@@ -38,7 +38,7 @@ trait ClusterSupport {
       // Convention: (head) role is used to label the nodes (single) actor
       val memberName = member.roles.head
 
-      for (rol: String <- member.getRoles) {
+      for (rol: String <- member.roles) {
         val actor = context.actorSelection(RootActorPath(member.address) / "user" / memberName)
         if (clusterMembers.contains(rol)) {
           clusterMembers = clusterMembers + (rol -> (actor :: clusterMembers(rol)))
@@ -46,6 +46,7 @@ trait ClusterSupport {
           clusterMembers = clusterMembers + (rol -> List(actor))
         }
       }
+      println("New state of cluster Members: "+clusterMembers)
     }
   }
 
@@ -54,7 +55,7 @@ trait ClusterSupport {
       // Convention: (head) role is used to label the nodes (single) actor
       val memberName = member.roles.head
 
-      for (rol: String <- member.getRoles) {
+      for (rol: String <- member.roles) {
         val memberPath = RootActorPath(member.address) / "user" / memberName
 
         if (clusterMembers.contains(rol)) {
@@ -63,6 +64,7 @@ trait ClusterSupport {
         }
       }
     }
+    println("New state of cluster Members: "+clusterMembers)
   }
 
 }

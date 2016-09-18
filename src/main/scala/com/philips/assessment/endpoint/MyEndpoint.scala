@@ -22,7 +22,7 @@ class MyEndpoint extends ScalatraServlet with FutureSupport {
   val actorController = system.actorOf(Props[EndpointActorController], name = "endpoint")
 
   override protected implicit def executor: ExecutionContext = system.dispatcher
-  implicit val timeout = new Timeout(1 seconds)
+  implicit val timeout = new Timeout(2 seconds)
 
   get("/") {
     doStuff( DoStuff )
@@ -52,10 +52,9 @@ class MyEndpoint extends ScalatraServlet with FutureSupport {
   }
 
   def getActorSystem() = {
-    val actorPort = servletContext.getAttribute("actorPort").asInstanceOf[Int]
 
     val clusterConfiguration =
-      ConfigFactory.parseString(s"akka.remote.netty.tcp.port=" + actorPort)
+      ConfigFactory.parseString(s"akka.remote.netty.tcp.port=0")
         .withFallback(ConfigFactory.parseString("akka.cluster.roles = [endpoint]"))
         .withFallback(ConfigFactory.load())
 

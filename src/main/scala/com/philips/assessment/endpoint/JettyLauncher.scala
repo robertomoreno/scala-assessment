@@ -1,4 +1,4 @@
-package com.philips.assessment
+package com.philips.assessment.endpoint
 
 import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.servlet.DefaultServlet
@@ -10,7 +10,7 @@ import org.scalatra.servlet.ScalatraListener
   */
 class JettyLauncher {
 
-  def run(serverPort : Int, actorPort : Int) = {
+  def run(serverPort : Int) = {
 
     val server = new Server(serverPort)
     val context = new WebAppContext()
@@ -19,8 +19,6 @@ class JettyLauncher {
     context.setInitParameter(ScalatraListener.LifeCycleKey, "com.philips.assessment.endpoint.ScalatraBootstrap")
     context.addEventListener(new ScalatraListener)
     context.addServlet(classOf[DefaultServlet], "/")
-
-    context.setAttribute("actorPort",actorPort)
 
     server.setHandler(context)
 

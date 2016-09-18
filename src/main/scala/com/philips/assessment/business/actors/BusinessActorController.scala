@@ -21,6 +21,6 @@ class BusinessActorController extends Actor{
   override def postStop() = cluster.unsubscribe(self)
 
   override def receive : Receive = {
-    case DoBusinessStuff => sender ! StuffDone("cool stuff done!")
+    case DoBusinessStuff => sender ! StuffDone(s"cool stuff done from $self to $sender!")
   }
 }

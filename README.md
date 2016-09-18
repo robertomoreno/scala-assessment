@@ -21,3 +21,18 @@ Even though we selected a new http framework, we would like to reuse as much cod
 * How would you integrate Finatra and Akka ?
 * Implement an endpoint which uses an Akka actor.
 * Write an integration test for the endpoint using ScalaTest.
+
+## Answer
+
+* Start an endpoint node:
+```scala
+sbt "runMain com.philips.assessment.Launcher endpoint 8080"
+```
+
+* Start a business node:
+```scala
+sbt "runMain com.philips.assessment.Launcher business 2552"
+```
+
+
+
