@@ -34,5 +34,9 @@ sbt "runMain com.philips.assessment.Launcher endpoint 8080"
 sbt "runMain com.philips.assessment.Launcher business 2552"
 ```
 
+```scala
+sbt "runMain com.philips.assessment.endpoint.finatra.imp.FinatraServerMain"
+```
+
 
 
