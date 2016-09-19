@@ -1,5 +1,6 @@
 package com.philips.assessment.endpoint
 
+import akka.actor.PoisonPill
 import org.scalatest.FunSuiteLike
 import org.scalatra.test.scalatest.ScalatraSuite
 
@@ -8,7 +9,12 @@ import org.scalatra.test.scalatest.ScalatraSuite
   */
 class MyEndpointTest extends ScalatraSuite with FunSuiteLike {
 
-  addServlet(classOf[MyEndpoint], "/*")
+  override def afterAll(): Unit = {
+    super.afterAll()
+    finishEndpointNode()
+  }
+
+  val servlet = addServlet(classOf[MyEndpoint], "/*")
 
   test("Wrong path"){
     get("/wrongPath") {
@@ -17,4 +23,12 @@ class MyEndpointTest extends ScalatraSuite with FunSuiteLike {
     }
   }
 
+  test("Correct path with no service"){
+    get("/") {
+      status should equal(500)
+    }
+  }
+
+
+  def finishEndpointNode() = servlet.getServlet.asInstanceOf[MyEndpoint].actorController ! PoisonPill
 }
