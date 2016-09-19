@@ -18,11 +18,12 @@ libraryDependencies ++= {
     "com.typesafe.akka" %% "akka-cluster" % akkaVersion,
     "org.scalatra" %% "scalatra" % scalatraVersion,
     "org.scalatra" %% "scalatra-scalate" % scalatraVersion,
-    "org.eclipse.jetty" % "jetty-webapp" % "8.1.7.v20120910" % "compile",
+    "org.eclipse.jetty" % "jetty-webapp" % "9.2.14.v20151106" % "compile",
+
     "org.eclipse.jetty.orbit" % "javax.servlet" % "3.0.0.v201112011016" % "compile;provided;test" artifacts (Artifact("javax.servlet", "jar", "jar")),
     "org.slf4j" % "slf4j-simple" % "1.7.21",
 
-  "org.scalatra" %% "scalatra-specs2" % scalatraVersion % "test",
+    "org.scalatra" %% "scalatra-scalatest" % scalatraVersion % "test",
     "org.scalatest" %% "scalatest" % scalaTestVersion % "test"
   )
 }

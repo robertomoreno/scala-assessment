@@ -7,7 +7,7 @@ import com.philips.assessment.business.actors.BusinessActorController.StuffDone
 import com.philips.assessment.endpoint.actors.EndpointActorController
 import com.philips.assessment.endpoint.actors.EndpointActorController.{DoStuff, EndpointMessage}
 import com.typesafe.config.ConfigFactory
-import org.scalatra.{FutureSupport, ScalatraServlet}
+import org.scalatra._
 
 import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
@@ -22,14 +22,14 @@ class MyEndpoint extends ScalatraServlet with FutureSupport {
   val actorController = system.actorOf(Props[EndpointActorController], name = "endpoint")
 
   override protected implicit def executor: ExecutionContext = system.dispatcher
-  implicit val timeout = new Timeout(2 seconds)
+  implicit val timeout = new Timeout(1 seconds)
 
   get("/") {
-    doStuff( DoStuff )
+    doStuff( DoStuff ).map(Ok(_)).recover{ case e => InternalServerError(e.getMessage) }
   }
 
   notFound {
-    "what are you looking for men?"
+    BadRequest ("what are you looking for?")
   }
 
   /**
