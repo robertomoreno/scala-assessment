@@ -1,20 +1,26 @@
 package com.philips.assessment.endpoint
 
 import akka.actor.PoisonPill
+import org.eclipse.jetty.servlet.ServletHolder
 import org.scalatest.FunSuiteLike
 import org.scalatra.test.scalatest.ScalatraSuite
 
 /**
   * Created by roberto on 18/09/2016.
   */
-class MyEndpointTest extends ScalatraSuite with FunSuiteLike {
+class MyEndpointErrorIntegrationTest extends ScalatraSuite with FunSuiteLike {
+
+  var servlet : ServletHolder= new ServletHolder()
+
+  override def beforeAll(): Unit = {
+    super.beforeAll()
+    servlet = addServlet(classOf[MyEndpoint], "/*")
+  }
 
   override def afterAll(): Unit = {
     super.afterAll()
-    finishEndpointNode()
+    killEndpointNode()
   }
-
-  val servlet = addServlet(classOf[MyEndpoint], "/*")
 
   test("Wrong path"){
     get("/wrongPath") {
@@ -30,5 +36,7 @@ class MyEndpointTest extends ScalatraSuite with FunSuiteLike {
   }
 
 
-  def finishEndpointNode() = servlet.getServlet.asInstanceOf[MyEndpoint].actorController ! PoisonPill
+  def killEndpointNode() = {
+    servlet.getServlet.asInstanceOf[MyEndpoint].actorController ! PoisonPill
+  }
 }
