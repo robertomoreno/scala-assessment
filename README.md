@@ -24,19 +24,40 @@ Even though we selected a new http framework, we would like to reuse as much cod
 
 ## Answer
 
-* Start an endpoint node:
-```scala
-sbt "runMain com.philips.assessment.Launcher endpoint 8080"
-```
+### Running the app
 
-* Start a business node:
+In order to execute correctly this application it is needed to run 2 diferents main class. 
+
+* Start, at least, two akka nodes in port 2551 and in port 2552 (seed nodes):
 ```scala
 sbt "runMain com.philips.assessment.Launcher business 2552"
 ```
 
+* Start a Finatra endpoint. Port 9999 is used:
 ```scala
 sbt "runMain com.philips.assessment.endpoint.finatra.imp.FinatraServerMain"
 ```
 
+**Run considerations**: SBT is required. If it is not possible to run the app in this 3 ports, go to
+`com.philips.assessment.endpoint.finatra.imp.FinatraServerMain` and `scala-assessment\src\main\resources\application.conf` and change the config parameters.
+
+### Explanation
+
+Akka is a JDK libray that allows develope concurrent, distributed, scalable and reliable applications based on actor model. A comon use case is to have a cluster of several nodes in orther to be able of process hight throughtput requirements (IoT for example). Our mission is create a new endpoint to interact with the cluster througth a REST API using Finatra Framework. `BusinessActorController` has been created to simulate a cluster node.   
+
+First step is create `FinatraServer` that handle `MyFinatraEndpoint`. Each `FinatraServer` has associated an Actor, `EndpointActorController`, which will be used to communicate the endpoint with the cluster. For each request, a message is send to `EndpointActorController` using the ask pattern. A future will be generated and will not be complited until a response is received from the cluster.
+
+```scala
+def doStuff(action: EndpointMessage, retries: Int = 0): Future[StuffDone] = {
+    (actorController ? DoStuff)
+      .mapTo[StuffDone]
+      .recoverWith {
+        case e : AskTimeoutException if retries < 3 =>
+          println("TimeoutException "+ retries)
+          doStuff(action, retries + 1)
+        case e => throw e
+      }
+  }
+```
 
 
