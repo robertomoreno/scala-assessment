@@ -1,6 +1,8 @@
 package com.philips.assessment.enpoint.finatra.imp
 
+import com.google.inject.Module
 import com.philips.assessment.endpoint.finatra.imp.FinatraServer
+import com.philips.assessment.endpoint.modules.{ClusterSystemTestModule, ClusterTestModule}
 import com.twitter.finagle.http.Status
 import com.twitter.finatra.http.test.EmbeddedHttpServer
 import com.twitter.inject.server.FeatureTest
@@ -10,7 +12,11 @@ import com.twitter.inject.server.FeatureTest
   */
 class MyFinatraEndpointIntegrationTest extends FeatureTest {
 
-  override val server = new EmbeddedHttpServer(new FinatraServer)
+  override val server = new EmbeddedHttpServer(
+    twitterServer = new FinatraServer {
+      override def overrideModules: Seq[Module] = Seq(ClusterTestModule,ClusterSystemTestModule)
+    }
+  )
 
 
   "MyTest" should  {

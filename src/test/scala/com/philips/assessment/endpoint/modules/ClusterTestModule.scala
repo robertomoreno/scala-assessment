@@ -15,9 +15,9 @@ object ClusterTestModule extends TwitterModule{
   @Provides
   def providesEndpointActor(system: ActorSystem): ActorRef = {
 
-    //class MyEndpoint extends EndpointActorController with SimpleBusinessActorSelector
+    class MyEndpoint extends EndpointActorController with SimpleBusinessActorSelector
 
-    system.actorOf(Props[EndpointActorController with SimpleBusinessActorSelector], name = "endpoint")
+    system.actorOf(Props[MyEndpoint], name = "endpoint")
   }
 
 }
