@@ -8,7 +8,32 @@ import com.typesafe.config.ConfigFactory
 /**
   * Created by roberto on 17/09/2016.
   */
-class BusinessLauncher {
+object BusinessLauncher {
+
+  def main(args: Array[String]): Unit = {
+
+    if (!args.isEmpty) {
+      try {
+        val List(port) = args.toList
+        run(port.toInt)
+      }
+      catch {
+        case e: Throwable =>
+          e.printStackTrace()
+          printHelp
+      }
+    } else {
+      run(2551)
+      run(2552)
+    }
+  }
+
+  def printHelp = println(
+    """
+      | - endpoint [serverPort,actorPort]
+      | - business [actorPort]
+    """.stripMargin
+  )
 
   def run (actorPort : Int) = {
     val clusterConfiguration =

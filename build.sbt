@@ -12,13 +12,10 @@ resolvers += "twttr" at "https://maven.twttr.com/"
 libraryDependencies ++= {
   val akkaVersion     = "2.4.10"
   val scalaTestVersion = "3.0.0"
-  val scalatraVersion = "2.4.+"
   val finatraVersion = "2.1.4"
 
   Seq(
     "com.typesafe.akka" %% "akka-cluster" % akkaVersion,
-    "org.scalatra" %% "scalatra" % scalatraVersion,
-    "org.scalatra" %% "scalatra-scalate" % scalatraVersion,
     "org.eclipse.jetty" % "jetty-webapp" % "9.2.14.v20151106" % "compile",
     "org.slf4j" % "slf4j-simple" % "1.7.21",
 
@@ -28,9 +25,7 @@ libraryDependencies ++= {
     "com.twitter.finatra" %% "finatra-http" % finatraVersion,
     "com.twitter.finatra" %% "finatra-httpclient" % finatraVersion,
     "com.twitter.finatra" %% "finatra-slf4j" % finatraVersion,
-    "com.twitter" %% "finagle-stats" % "6.33.0" excludeAll(
-      ExclusionRule("asm") // exclude because of conflict creating test report with PegDown
-      ),
+    "com.twitter" %% "finagle-stats" % "6.33.0" excludeAll ExclusionRule("asm"), // exclude because of conflict creating test report with PegDown,
     "com.twitter" % "bijection-core_2.11" % "0.9.2",
     "com.twitter" % "bijection-util_2.11" % "0.9.2",
 
@@ -62,7 +57,6 @@ libraryDependencies ++= {
     "com.twitter.inject" %% "inject-server" % finatraVersion % "test" classifier "tests",
     "org.specs2" %% "specs2-mock" % "3.7.2" % "test",
 
-    "org.scalatra" %% "scalatra-scalatest" % scalatraVersion % "test" excludeAll(ExclusionRule(organization="org.eclipse.jetty")),
     "org.scalatest" %% "scalatest" % scalaTestVersion % "test"
   )
 }
