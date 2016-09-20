@@ -1,31 +1,25 @@
 package com.philips.assessment.endpoint.finatra.imp
 
-import akka.actor.{ActorSystem, Props}
+import akka.actor.{ActorRef, ActorSystem}
 import akka.pattern.{AskTimeoutException, ask}
 import akka.util.Timeout
+import com.google.inject.Inject
 import com.philips.assessment.business.actors.BusinessActorController.StuffDone
 import com.philips.assessment.endpoint.actors.EndpointActorController.{DoStuff, EndpointMessage}
-import com.philips.assessment.endpoint.actors.NewEndpoint
 import com.twitter.bijection.Conversion._
 import com.twitter.bijection.twitter_util.UtilBijections.twitter2ScalaFuture
 import com.twitter.finagle.http.Request
 import com.twitter.finatra.http.Controller
 import com.twitter.util.{Future => TwitterFuture}
-import com.typesafe.config.ConfigFactory
 
 import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
 
 
-class MyFinatraEndpoint extends Controller {
-
-  val system = getActorSystem()
-  val actorController = system.actorOf(Props[NewEndpoint], name = "endpoint")
+class MyFinatraEndpoint @Inject() (actorController : ActorRef, system: ActorSystem) extends Controller {
 
   implicit val executor: ExecutionContext = system.dispatcher
   implicit val timeout = new Timeout(1 seconds)
-
-
 
   get("/") { request: Request =>
     doStuff( DoStuff ).as[TwitterFuture[StuffDone]]
@@ -49,13 +43,4 @@ class MyFinatraEndpoint extends Controller {
       }
   }
 
-  def getActorSystem() = {
-
-    val clusterConfiguration =
-      ConfigFactory.parseString(s"akka.remote.netty.tcp.port=0")
-        .withFallback(ConfigFactory.parseString("akka.cluster.roles = [endpoint]"))
-        .withFallback(ConfigFactory.load())
-
-    ActorSystem("ClusterSystem", clusterConfiguration)
-  }
 }

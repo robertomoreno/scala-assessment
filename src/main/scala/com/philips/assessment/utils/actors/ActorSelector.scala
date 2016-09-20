@@ -57,7 +57,7 @@ trait RandomClusterSelector extends ActorSelector with ClusterSupport {
   override def selectActorRef(): Option[ActorRef] = ???
 
   override def selectActorPath(): Option[ActorSelection] = {
-    println("selectActorPath")
+
     val businessActors = clusterMembers.getOrElse("business", List.empty)
 
     if (businessActors.size == 0) {
