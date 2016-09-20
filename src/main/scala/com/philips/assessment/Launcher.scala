@@ -1,7 +1,7 @@
 package com.philips.assessment
 
 import com.philips.assessment.business.BusinessLauncher
-import com.philips.assessment.endpoint.JettyLauncher
+import com.philips.assessment.endpoint.scalatra.imp.JettyLauncher
 
 /**
   * Created by roberto on 17/09/2016.

@@ -1,6 +1,6 @@
 package com.philips.assessment.utils
 
-import akka.actor.{Actor, ActorSelection, RootActorPath}
+import akka.actor.Actor
 import akka.cluster.ClusterEvent._
 import akka.cluster.{Cluster, Member}
 
@@ -19,51 +19,26 @@ trait ClusterSupport {
 
   override def postStop() = cluster.unsubscribe(self)
 
-  protected var clusterMembers = Map[String, List[ActorSelection]]() //(Role -> Members in the cluster with that role)
-
   /**
     * Bind to [[akka.actor.Actor.receive]]
     * @return
     */
   protected def clusterReceive: Receive = {
-    case state : CurrentClusterState => state.members.foreach(addMember)
-    case MemberUp(m) => addMember(m)
-    case other: MemberEvent => println(other); removeMember(other.member)
-    case UnreachableMember(m) => removeMember(m)
-    case ReachableMember(m) => addMember(m)
+    case state : CurrentClusterState => onInitialState(state)
+    case MemberUp(m) => onMemberUp(m)
+    case other: MemberEvent => onNonMemberUp(other)
+    case UnreachableMember(m) => onUnreachableMember(m)
+    case ReachableMember(m) => onReachableMember(m)
   }
 
-  private def addMember(member : Member) : Unit = {
-    if (!member.roles.isEmpty) {
-      // Convention: (head) role is used to label the nodes (single) actor
-      val memberName = member.roles.head
+  protected def onInitialState(state : CurrentClusterState) = {}
 
-      for (rol: String <- member.roles) {
-        val actor = context.actorSelection(RootActorPath(member.address) / "user" / memberName)
-        if (clusterMembers.contains(rol)) {
-          clusterMembers = clusterMembers + (rol -> (actor :: clusterMembers(rol)))
-        } else {
-          clusterMembers = clusterMembers + (rol -> List(actor))
-        }
-      }
-      println(s"\n\nAdded Node. New state of cluster Members: $clusterMembers \n\n")
-    }
-  }
+  protected def onMemberUp(member: Member) = {}
 
-  private def removeMember(member : Member) : Unit = {
-    if (!member.roles.isEmpty) {
-      // Convention: (head) role is used to label the nodes (single) actor
-      val memberPath = RootActorPath(member.address)
+  protected def onNonMemberUp(event: MemberEvent) = println(event)
 
-      for (rol: String <- member.roles) {
+  protected def onUnreachableMember(member: Member) = {}
 
-        if (clusterMembers.contains(rol)) {
-          val newMembers = clusterMembers(rol).filter{_.anchorPath.compareTo(memberPath) != 0 }
-          clusterMembers = clusterMembers + (rol -> newMembers)
-        }
-      }
-    }
-    println(s"\n\nRemoved Node. New state of cluster Members: $clusterMembers \n\n")
-  }
+  protected def onReachableMember(member: Member) = {}
 
 }

@@ -1,13 +1,11 @@
-package com.philips.assessment.endpoint
+package com.philips.assessment.endpoint.scalatra.imp
 
 import akka.actor.PoisonPill
 import org.eclipse.jetty.servlet.ServletHolder
 import org.scalatest.FunSuiteLike
 import org.scalatra.test.scalatest.ScalatraSuite
 
-/**
-  * Created by roberto on 18/09/2016.
-  */
+
 class MyEndpointErrorIntegrationTest extends ScalatraSuite with FunSuiteLike {
 
   var servlet : ServletHolder= new ServletHolder()

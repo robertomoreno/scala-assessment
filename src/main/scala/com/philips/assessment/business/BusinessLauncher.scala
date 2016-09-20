@@ -2,6 +2,7 @@ package com.philips.assessment.business
 
 import akka.actor.{ActorSystem, Props}
 import com.philips.assessment.business.actors.BusinessActorController
+import com.philips.assessment.utils.ClusterSupport
 import com.typesafe.config.ConfigFactory
 
 /**
@@ -17,7 +18,7 @@ class BusinessLauncher {
 
     val system = ActorSystem("ClusterSystem", clusterConfiguration)
 
-    system.actorOf(Props(classOf[BusinessActorController]), name = "business")
+    system.actorOf(Props[BusinessActorController with ClusterSupport], name = "business")
   }
 
 }

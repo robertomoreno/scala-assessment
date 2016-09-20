@@ -1,4 +1,4 @@
-package com.philips.assessment.endpoint
+package com.philips.assessment.endpoint.scalatra.imp
 
 import javax.servlet.ServletContext
 

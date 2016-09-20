@@ -1,35 +1,34 @@
-package com.philips.assessment.endpoint
+package com.philips.assessment.endpoint.finatra.imp
 
 import akka.actor.{ActorSystem, Props}
 import akka.pattern.{AskTimeoutException, ask}
 import akka.util.Timeout
 import com.philips.assessment.business.actors.BusinessActorController.StuffDone
-import com.philips.assessment.endpoint.actors.EndpointActorController
 import com.philips.assessment.endpoint.actors.EndpointActorController.{DoStuff, EndpointMessage}
+import com.philips.assessment.endpoint.actors.NewEndpoint
+import com.twitter.bijection.Conversion._
+import com.twitter.bijection.twitter_util.UtilBijections.twitter2ScalaFuture
+import com.twitter.finagle.http.Request
+import com.twitter.finatra.http.Controller
+import com.twitter.util.{Future => TwitterFuture}
 import com.typesafe.config.ConfigFactory
-import org.scalatra._
 
 import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}
 
-/**
-  * Created by roberto on 17/09/2016.
-  */
-class MyEndpoint extends ScalatraServlet with FutureSupport {
+
+class MyFinatraEndpoint extends Controller {
 
   val system = getActorSystem()
+  val actorController = system.actorOf(Props[NewEndpoint], name = "endpoint")
 
-  val actorController = system.actorOf(Props[EndpointActorController], name = "endpoint")
-
-  override protected implicit def executor: ExecutionContext = system.dispatcher
+  implicit val executor: ExecutionContext = system.dispatcher
   implicit val timeout = new Timeout(1 seconds)
 
-  get("/") {
-    doStuff( DoStuff ).map(Ok(_)).recover{ case e => InternalServerError(e.getMessage) }
-  }
 
-  notFound {
-    BadRequest ("what are you looking for?")
+
+  get("/") { request: Request =>
+    doStuff( DoStuff ).as[TwitterFuture[StuffDone]]
   }
 
   /**
@@ -47,7 +46,6 @@ class MyEndpoint extends ScalatraServlet with FutureSupport {
         case e : AskTimeoutException if retries < 3 =>
           println("TimeoutException "+ retries)
           doStuff(action, retries + 1)
-        case e => throw e
       }
   }
 

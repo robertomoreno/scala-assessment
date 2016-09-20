@@ -1,4 +1,4 @@
-package com.philips.assessment.endpoint
+package com.philips.assessment.endpoint.scalatra.imp
 
 import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.servlet.DefaultServlet
@@ -16,7 +16,7 @@ class JettyLauncher {
     val context = new WebAppContext()
     context setContextPath "/"
     context.setResourceBase("src/main/webapp")
-    context.setInitParameter(ScalatraListener.LifeCycleKey, "com.philips.assessment.endpoint.ScalatraBootstrap")
+    context.setInitParameter(ScalatraListener.LifeCycleKey, "com.philips.assessment.endpoint.scalatra.imp.ScalatraBootstrap")
     context.addEventListener(new ScalatraListener)
     context.addServlet(classOf[DefaultServlet], "/")
 
