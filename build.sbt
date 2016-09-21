@@ -10,13 +10,12 @@ scalaVersion := "2.11.7"
 resolvers += "twttr" at "https://maven.twttr.com/"
 
 libraryDependencies ++= {
-  val akkaVersion     = "2.4.10"
-  val scalaTestVersion = "3.0.0"
+  val akkaVersion     = "2.4.2"
+  val scalaTestVersion = "2.2.3"
   val finatraVersion = "2.1.4"
 
   Seq(
     "com.typesafe.akka" %% "akka-cluster" % akkaVersion,
-    "org.eclipse.jetty" % "jetty-webapp" % "9.2.14.v20151106" % "compile",
     "org.slf4j" % "slf4j-simple" % "1.7.21",
 
     "org.scala-lang" % "scala-reflect" % scalaVersion.value,
@@ -55,8 +54,6 @@ libraryDependencies ++= {
     "com.twitter.inject" %% "inject-core" % finatraVersion % "test" classifier "tests",
     "com.twitter.inject" %% "inject-modules" % finatraVersion % "test" classifier "tests",
     "com.twitter.inject" %% "inject-server" % finatraVersion % "test" classifier "tests",
-    "org.specs2" %% "specs2-mock" % "3.7.2" % "test",
-
-    "org.scalatest" %% "scalatest" % scalaTestVersion % "test"
+    "org.specs2" %% "specs2-mock" % "3.7.2" % "test"
   )
 }

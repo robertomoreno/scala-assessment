@@ -16,5 +16,5 @@ trait SimpleBusinessActorSelector extends ActorSelector {
     *
     * @throws NotImplementedError
     */
-  override def selectActorPath(): Option[ActorSelection] = ???
+  override def selectActorPath(): Option[ActorSelection] = Some(context.actorSelection(actorRef.get.path))
 }
