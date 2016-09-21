@@ -51,13 +51,16 @@ First step is create `FinatraServer` that handle `MyFinatraEndpoint`. Each `Fina
 def doStuff(action: EndpointMessage, retries: Int = 0): Future[StuffDone] = {
     (actorController ? DoStuff)
       .mapTo[StuffDone]
-      .recoverWith {
-        case e : AskTimeoutException if retries < 3 =>
-          println("TimeoutException "+ retries)
-          doStuff(action, retries + 1)
-        case e => throw e
-      }
+      ...
   }
 ```
+
+Hire is a representation of whats happening
+![Alt text](/../master/images/endpoint.png?raw=true )
+Note that the algoritm used for load balancing messages from EnpointActor and BusinessActor is a simple random balance per node rol. Diferent balances policies can be implemented ussing the information that we receive from ClusterEvents. Also, it is posible to use Router utilitis provides by Akka.
+
+One of the advantages of this implementation is that is easy create new instance of the endpoint if needed. We could implement an architecture similar like as follows just configuring an Apache Server for the balance of the Http requests:
+![Alt text](/../master/images/multinodes.png?raw=true )
+
 
 
