@@ -55,12 +55,22 @@ def doStuff(action: EndpointMessage, retries: Int = 0): Future[StuffDone] = {
   }
 ```
 
-Hire is a representation of whats happening
+Hire is a representation of whats happening:
+
 ![Alt text](/../master/images/endpoint.png?raw=true )
+
 Note that the algoritm used for load balancing messages from EnpointActor and BusinessActor is a simple random balance per node rol. Diferent balances policies can be implemented ussing the information that we receive from ClusterEvents. Also, it is posible to use Router utilitis provides by Akka.
 
-One of the advantages of this implementation is that is easy create new instance of the endpoint if needed. We could implement an architecture similar like as follows just configuring an Apache Server for the balance of the Http requests:
+One of the advantages of this implementation is that is easy create new instance of endpoints if needed. We could implement an architecture similar like as follows just configuring an Apache Server for the balance of the Http requests:
+
 ![Alt text](/../master/images/multinodes.png?raw=true )
 
+###App Architecture
+
+Is important to decouple as much logic as posible to easy testing and maintenance. Traits and Guice DI are used to achive this target. * `EndpointActorController` contains all logic related to push messages from endpoint to the bussiness node. Note that it is a plain Actor, none cluster logic hire. In order to use `EndpointActorController` it is required a `ActorSelector`
+* `ClusterSupport` requires an Actor to be used. Contains all the logic needed for instantiate a cluster for an Actor, subscribe to ClusterEvents and provide functions to react to ClusterEvents.
+* `ActorSelector` is a trait whose responsability is to choose what actor will be used to push messages from `EndpointActorController`. It has two implementations:
+** `RandomClusterSelector` implements a simple random balance algorithm to push  essages to `BusinessActorController` nodes in cluster.
+** `SimpleBusinessActorSelector`. Just for testing.
 
 
