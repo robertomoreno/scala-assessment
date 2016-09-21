@@ -1,6 +1,6 @@
 package com.philips.assessment.utils.actors
 
-import akka.actor.{Actor, ActorRef, ActorSelection, RootActorPath}
+import akka.actor.{Actor, ActorSelection, RootActorPath}
 import akka.cluster.ClusterEvent._
 import akka.cluster.Member
 import com.philips.assessment.utils.ClusterSupport
@@ -12,8 +12,6 @@ import scala.util.Random
   * Created by roberto on 20/09/2016.
   */
 trait ActorSelector {
-
-  def selectActorRef(): Option[ActorRef]
 
   def selectActorPath(): Option[ActorSelection]
 }
@@ -48,13 +46,6 @@ trait RandomClusterSelector extends ActorSelector with ClusterSupport {
     super.onReachableMember(member)
     addMember(member)
   }
-
-  /**
-    * Not implemented
-    *
-    * @throws NotImplementedError
-    */
-  override def selectActorRef(): Option[ActorRef] = ???
 
   override def selectActorPath(): Option[ActorSelection] = {
 

@@ -1,4 +1,4 @@
-package com.philips.assessment.endpoint.finatra.imp
+package com.philips.assessment.endpoint
 
 import akka.actor.{ActorRef, ActorSystem}
 import akka.pattern.{AskTimeoutException, ask}

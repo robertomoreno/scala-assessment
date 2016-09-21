@@ -1,4 +1,4 @@
-package com.philips.assessment.endpoint.finatra.imp
+package com.philips.assessment.endpoint
 
 import com.philips.assessment.endpoint.modules.{ClusterModule, ClusterSystemModule}
 import com.twitter.finagle.http.{Request, Response}
