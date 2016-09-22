@@ -1,30 +1,4 @@
-# Assessment
-
-This assessment is used to provide a topic for interviewing a candidate for
-a Scala role.
-
-## Case:
-
-In Januari 2015 our team started developing an IoT application using the
-libraries Spray and [Akka](http://www.akka.io).  
-On year later, because of changed requirements we have to make some major changes
-to the application. We use this opportunity to also change the application
-because of changed insights and having learned to use these libraries.
-
-In particular, we want to replace Spray with another HTTP framework.
-After looking at several alternatives, we choose [Finatra](https://twitter.github.io/finatra/), a Twitter framework based on [Finagle](http://twitter.github.io/finagle/) and [TwitterServer](http://twitter.github.io/twitter-server/).
-
-Even though we selected a new http framework, we would like to reuse as much code of the original [Akka](http://www.akka.io) application as possible.
-
-## Question
-
-* How would you integrate Finatra and Akka ?
-* Implement an endpoint which uses an Akka actor.
-* Write an integration test for the endpoint using ScalaTest.
-
-## Answer
-
-### Running the app
+## Running the app
 
 In order to execute correctly this application it is needed to run 2 diferents main class. 
 
@@ -41,18 +15,14 @@ sbt "runMain com.philips.assessment.endpoint.FinatraServerMain"
 **Run considerations**: SBT is required. If it is not possible to run the seed nodes in these 2 ports, go to
 `scala-assessment\src\main\resources\application.conf` and change it.
 
-### Explanation
+## Explanation
 
-Akka is a JDK libray that allows develope concurrent, distributed, scalable and reliable applications based on actor model. A comon use case is to have a cluster of several nodes in orther to be able of process hight throughtput requirements (IoT for example). Our mission is create a new endpoint to interact with the cluster througth a REST API using Finatra Framework. `BusinessActorController` has been created to simulate a cluster node.   
+Akka is a JDK libray that allows develope concurrent, distributed, scalable and reliable applications based on actor model. A comon use case is to have a cluster of several nodes in orther to be able of process hight throughtput requirements (IoT for example). Our mission is create a new endpoint to interact with the cluster througth a REST API using Finatra Framework. [BusinessActorController][BusinessActorController] has been created to simulate a cluster node.   
 
-First step is create `FinatraServer` that handle `MyFinatraEndpoint`. Each `FinatraServer` has associated an Actor, `EndpointActorController`, which will be used to communicate the endpoint with the cluster. For each request, a message is send to `EndpointActorController` using the ask pattern. A future will be generated and will not be complited until a response is received from the cluster.
+First step is create `FinatraServer` that handle [MyFinatraEndpoint][MyFinatraEndpoint]. Each `FinatraServer` has associated an Actor, [EndpointActorController][EndpointActorController], which will be used to communicate the endpoint with the cluster. For each request, a message is send to [EndpointActorController][EndpointActorController] using the ask pattern. A future will be generated and will not be complited until a response is received from the cluster.
 
 ```scala
-def doStuff(action: EndpointMessage, retries: Int = 0): Future[StuffDone] = {
-    (actorController ? DoStuff)
-      .mapTo[StuffDone]
-      ...
-  }
+(actorController ? DoStuff).mapTo[StuffDone]
 ```
 
 Hire is a representation of whats happening:
@@ -65,12 +35,23 @@ One of the advantages of this implementation is that is easy create new instance
 
 ![Alt text](/../master/images/multinodes.png?raw=true )
 
-###App Architecture
+## App Architecture
 
-Is important to decouple as much logic as posible to easy testing and maintenance. Traits and Guice DI are used to achive this target. * `EndpointActorController` contains all logic related to push messages from endpoint to the bussiness node. Note that it is a plain Actor, none cluster logic hire. In order to use `EndpointActorController` it is required a `ActorSelector`
-* `ClusterSupport` requires an Actor to be used. Contains all the logic needed for instantiate a cluster for an Actor, subscribe to ClusterEvents and provide functions to react to ClusterEvents.
-* `ActorSelector` is a trait whose responsability is to choose what actor will be used to push messages. It has two implementations:
-** `RandomClusterSelector` implements a simple random balance algorithm to push  essages to `BusinessActorController` nodes in cluster.
-** `SimpleBusinessActorSelector`. Just for testing.
+Is important to decouple as much logic as posible to easy testing and maintenance. Traits and Guice DI are used to achive this target.
+
+* [EndpointActorController][EndpointActorController] contains all logic related to push messages from endpoint to the bussiness node. Note that it is a plain Actor, none cluster logic hire. In order to use [EndpointActorController][EndpointActorController] it is required a [ActorSelector][ActorSelector]
+* [ClusterSupport][ClusterSupport] requires an Actor to be used. Contains all the logic needed for instantiate a cluster for an Actor, subscribe to ClusterEvents and provide functions to react to ClusterEvents.
+* [ActorSelector][ActorSelector] is a trait whose responsability is to choose what actor will be used to push messages. It has two implementations:
+** [RandomClusterSelector][ActorSelector] implements a simple random balance algorithm to push messages to [BusinessActorController][BusinessActorController] nodes in cluster.
+** [SimpleBusinessActorSelector][ActorSelector]. Just for testing.
+
+[EndpointActorController]: https://github.com/robertomoreno/scala-assessment/blob/master/src/main/scala/com/philips/assessment/endpoint/actors/EndpointActorController.scala
+[MyFinatraEndpoint]: https://github.com/robertomoreno/scala-assessment/blob/master/src/main/scala/com/philips/assessment/endpoint/MyFinatraEndpoint.scala
+[ClusterSupport]: https://github.com/robertomoreno/scala-assessment/blob/master/src/main/scala/com/philips/assessment/utils/ClusterSupport.scala
+[ActorSelector]: https://github.com/robertomoreno/scala-assessment/blob/master/src/main/scala/com/philips/assessment/utils/actors/ActorSelector.scala
+[ClusterState]: https://github.com/robertomoreno/scala-assessment/blob/master/src/main/scala/com/philips/assessment/utils/actors/ClusterState.scala
+[BusinessActorController]: https://github.com/robertomoreno/scala-assessment/blob/master/src/main/scala/com/philips/assessment/business/actors/BusinessActorController.scala
+
+
 
 
