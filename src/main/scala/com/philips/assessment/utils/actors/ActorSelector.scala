@@ -14,7 +14,7 @@ trait ActorSelector {
   def selectActorPath(): Option[ActorSelection]
 }
 
-trait RandomClusterSelector extends ActorSelector with ClusterSupport {
+trait RandomNodeSelector extends ActorSelector with ClusterSupport {
 
   this: Actor with ClusterState[Map[String, List[ActorSelection]]] =>
 

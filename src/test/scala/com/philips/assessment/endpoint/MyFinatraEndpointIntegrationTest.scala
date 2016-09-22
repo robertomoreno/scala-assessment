@@ -1,7 +1,6 @@
-package com.philips.assessment.enpoint.finatra.imp
+package com.philips.assessment.endpoint
 
 import com.google.inject.Module
-import com.philips.assessment.endpoint.FinatraServer
 import com.philips.assessment.endpoint.modules.{ClusterSystemTestModule, ClusterTestModule}
 import com.twitter.finagle.http.Status
 import com.twitter.finatra.http.test.EmbeddedHttpServer

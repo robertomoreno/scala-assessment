@@ -5,9 +5,7 @@ import com.philips.assessment.business.actors.BusinessActorController
 import com.philips.assessment.utils.ClusterSupport
 import com.typesafe.config.ConfigFactory
 
-/**
-  * Created by roberto on 17/09/2016.
-  */
+
 object BusinessLauncher {
 
   def main(args: Array[String]): Unit = {

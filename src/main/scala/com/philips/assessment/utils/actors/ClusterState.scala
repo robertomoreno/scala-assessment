@@ -10,7 +10,7 @@ trait ClusterState[T] {
   def getClusterState :T
 }
 
-trait ClusterStateByNodeRole extends ClusterState[Map[String, List[ActorSelection]]] {
+trait ByNodeRole extends ClusterState[Map[String, List[ActorSelection]]] {
   this: Actor  with ClusterSupport=>
 
   protected var clusterMembers = Map[String, List[ActorSelection]]() //(Role -> Members in the cluster with that role)
