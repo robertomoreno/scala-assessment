@@ -37,10 +37,10 @@ Is important to decouple as much logic as posible to easy testing and maintenanc
 
 * [EndpointActorController][EndpointActorController] contains all logic related to push messages from endpoint to the bussiness node. Note that it is a plain Actor, none cluster logic here. In order to use [EndpointActorController][EndpointActorController] it is required a [ActorSelector][ActorSelector]
 * [ClusterSupport][ClusterSupport] requires an Actor to be used. Contains all the logic needed for instantiate a cluster for an Actor, subscribe to ClusterEvents and provide functions to react to ClusterEvents.
-* [ClusterState][ClusterState] responability is to generate the state of the cluster from `ClusterEvents`. Its implementation, [ClusterStateByNodeRole][ClusterState] group cluster nodes by role. Furder implementations could change the group logic (for instance, by region).
+* [ClusterState][ClusterState] responability is to generate the state of the cluster from `ClusterEvents`. Its implementation, [ByNodeRole][ClusterState] group cluster nodes by role. Furder implementations could change the group logic (for instance, by region).
 * [ActorSelector][ActorSelector] is a trait whose responsability is to choose what actor will be used to push messages. It has two implementations:
-.* [RandomClusterSelector][ActorSelector] implements a simple random balance algorithm to push messages to [BusinessActorController][BusinessActorController] nodes in cluster.
-.* [SimpleBusinessActorSelector][ActorSelector]. Just for testing.
+..* [RandomNodeSelector][ActorSelector] implements a simple random balance algorithm to push messages to [BusinessActorController][BusinessActorController] nodes in cluster.
+..* [SimpleBusinessActorSelector][ActorSelector]. Just for testing.
 
 An `ActorRef` is injected by Gice using Finatra tools in [ClusterModule][ClusterModule]. The following section worth a closer look:
 
