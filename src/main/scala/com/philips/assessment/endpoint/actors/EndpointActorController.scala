@@ -11,7 +11,6 @@ object EndpointActorController {
   trait EndpointMessage
 
   case object DoStuff extends EndpointMessage
-
 }
 
 class EndpointActorController extends Actor {
@@ -24,5 +23,4 @@ class EndpointActorController extends Actor {
         case None => throw new NoSuchElementException("service is not available right now")
       }
   }
-
 }

@@ -35,7 +35,7 @@ trait ClusterSupport {
 
   protected def onMemberUp(member: Member) = {}
 
-  protected def onNonMemberUp(event: MemberEvent) = println(event)
+  protected def onNonMemberUp(event: MemberEvent) = {}
 
   protected def onUnreachableMember(member: Member) = {}
 
