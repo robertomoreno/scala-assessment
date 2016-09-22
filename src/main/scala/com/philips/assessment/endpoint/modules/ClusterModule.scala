@@ -3,7 +3,8 @@ package com.philips.assessment.endpoint.modules
 import akka.actor.{ActorRef, ActorSystem, Props}
 import com.google.inject.{Provides, Singleton}
 import com.philips.assessment.endpoint.actors.EndpointActorController
-import com.philips.assessment.utils.actors.RandomClusterSelector
+import com.philips.assessment.utils.ClusterSupport
+import com.philips.assessment.utils.actors.{ClusterStateByNodeRole, RandomClusterSelector}
 import com.twitter.inject.TwitterModule
 import com.typesafe.config.ConfigFactory
 
@@ -16,11 +17,11 @@ object ClusterModule extends TwitterModule {
   @Provides
   def providesEndpointActor(system: ActorSystem): ActorRef = {
 
-    class MyClusterEndpoint extends EndpointActorController with RandomClusterSelector {
+    class EndpointNode extends EndpointActorController with ClusterSupport with ClusterStateByNodeRole with RandomClusterSelector{
       override def receive: Receive = super.receive orElse clusterReceive
     }
 
-    system.actorOf(Props[MyClusterEndpoint], name = "endpoint")
+    system.actorOf(Props[EndpointNode], name = "endpoint")
   }
 }
 

@@ -43,7 +43,9 @@ object BusinessLauncher {
 
     val system = ActorSystem("ClusterSystem", clusterConfiguration)
 
-    system.actorOf(Props[BusinessActorController with ClusterSupport], name = "business")
+    class BusinessNode extends BusinessActorController with ClusterSupport
+
+    system.actorOf(Props[BusinessNode], name = "business")
   }
 
 }

@@ -30,12 +30,12 @@ In order to execute correctly this application it is needed to run 2 diferents m
 
 * Start, at least, two akka nodes in port 2551 and in port 2552 (seed nodes):
 ```scala
-sbt "runMain com.philips.assessment.Launcher business 2552"
+sbt "runMain com.philips.assessment.business.BusinessLauncher 2552"
 ```
 
 * Start a Finatra endpoint. Port 9999 is used:
 ```scala
-sbt "runMain com.philips.assessment.endpoint.finatra.imp.FinatraServerMain"
+sbt "runMain com.philips.assessment.endpoint.FinatraServerMain"
 ```
 
 **Run considerations**: SBT is required. If it is not possible to run the app in this 3 ports, go to
