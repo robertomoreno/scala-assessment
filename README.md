@@ -28,18 +28,18 @@ Even though we selected a new http framework, we would like to reuse as much cod
 
 In order to execute correctly this application it is needed to run 2 diferents main class. 
 
-* Start, at least, two akka nodes in port 2551 and in port 2552 (seed nodes):
+* Start, at least, two akka nodes in port 2551 and in port 2552 (If no port is indicated, the launcher will run an instance for each seed node):
 ```scala
 sbt "runMain com.philips.assessment.business.BusinessLauncher 2552"
 ```
 
-* Start a Finatra endpoint. Port 9999 is used:
+* Start a Finatra endpoint. Port 9999 is used but this can be changed ussing finatra flags as usual:
 ```scala
 sbt "runMain com.philips.assessment.endpoint.FinatraServerMain"
 ```
 
-**Run considerations**: SBT is required. If it is not possible to run the app in this 3 ports, go to
-`com.philips.assessment.endpoint.finatra.imp.FinatraServerMain` and `scala-assessment\src\main\resources\application.conf` and change the config parameters.
+**Run considerations**: SBT is required. If it is not possible to run the seed nodes in these 2 ports, go to
+`scala-assessment\src\main\resources\application.conf` and change it.
 
 ### Explanation
 
@@ -69,7 +69,7 @@ One of the advantages of this implementation is that is easy create new instance
 
 Is important to decouple as much logic as posible to easy testing and maintenance. Traits and Guice DI are used to achive this target. * `EndpointActorController` contains all logic related to push messages from endpoint to the bussiness node. Note that it is a plain Actor, none cluster logic hire. In order to use `EndpointActorController` it is required a `ActorSelector`
 * `ClusterSupport` requires an Actor to be used. Contains all the logic needed for instantiate a cluster for an Actor, subscribe to ClusterEvents and provide functions to react to ClusterEvents.
-* `ActorSelector` is a trait whose responsability is to choose what actor will be used to push messages from `EndpointActorController`. It has two implementations:
+* `ActorSelector` is a trait whose responsability is to choose what actor will be used to push messages. It has two implementations:
 ** `RandomClusterSelector` implements a simple random balance algorithm to push  essages to `BusinessActorController` nodes in cluster.
 ** `SimpleBusinessActorSelector`. Just for testing.
 
